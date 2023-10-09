@@ -77,8 +77,6 @@ int dummy;
 void read(){
 // Simulated rain sensor input (1: No rain, 0: Rain)
  // rain_sensor_ip = digital_read(0);
-  // Roof status output (0: Open, 1: Closed)
- // roof_status_op = digital_write(2);
  int rain_sensor_ip;
  asm volatile(
             "and %0, x30, 1\n\t"
