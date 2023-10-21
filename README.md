@@ -92,27 +92,27 @@ out:     file format elf32-littleriscv
 
 Disassembly of section .text:
 
-00010074 <main>:
-   10074:	fe010113          	add	sp,sp,-32
-   10078:	00812e23          	sw	s0,28(sp)
-   1007c:	02010413          	add	s0,sp,32
-   10080:	001f7793          	and	a5,t5,1
-   10084:	fef42623          	sw	a5,-20(s0)
-   10088:	fec42703          	lw	a4,-20(s0)
-   1008c:	00100793          	li	a5,1
-   10090:	00f70e63          	beq	a4,a5,100ac <main+0x38>
-   10094:	ffb00793          	li	a5,-5
-   10098:	fef42423          	sw	a5,-24(s0)
-   1009c:	fe842783          	lw	a5,-24(s0)
-   100a0:	00ff7f33          	and	t5,t5,a5
-   100a4:	004f6f13          	or	t5,t5,4
-   100a8:	fd9ff06f          	j	10080 <main+0xc>
-   100ac:	ffb00793          	li	a5,-5
-   100b0:	fef42423          	sw	a5,-24(s0)
-   100b4:	fe842783          	lw	a5,-24(s0)
-   100b8:	00ff7f33          	and	t5,t5,a5
-   100bc:	000f6f13          	or	t5,t5,0
-   100c0:	fc1ff06f          	j	10080 <main+0xc>
+00010054 <main>:
+   10054:	fe010113          	addi	sp,sp,-32
+   10058:	00812e23          	sw	s0,28(sp)
+   1005c:	02010413          	addi	s0,sp,32
+   10060:	001f7793          	andi	a5,t5,1
+   10064:	fef42623          	sw	a5,-20(s0)
+   10068:	fec42703          	lw	a4,-20(s0)
+   1006c:	00100793          	li	a5,1
+   10070:	00f70e63          	beq	a4,a5,1008c <main+0x38>
+   10074:	ffb00793          	li	a5,-5
+   10078:	fef42423          	sw	a5,-24(s0)
+   1007c:	fe842783          	lw	a5,-24(s0)
+   10080:	00ff7f33          	and	t5,t5,a5
+   10084:	004f6f13          	ori	t5,t5,4
+   10088:	fd9ff06f          	j	10060 <main+0xc>
+   1008c:	ffb00793          	li	a5,-5
+   10090:	fef42423          	sw	a5,-24(s0)
+   10094:	fe842783          	lw	a5,-24(s0)
+   10098:	00ff7f33          	and	t5,t5,a5
+   1009c:	000f6f13          	ori	t5,t5,0
+   100a0:	fc1ff06f          	j	10060 <main+0xc>
 
 ```
 
@@ -121,16 +121,17 @@ The above assembly code was run on a Python script to find the different instruc
 <br />
 
 ```
-Number of different instructions: 8
+Number of different instructions: 9
 List of unique instructions:
-sw
+addi
 j
-add
-and
-beq
+andi
 lw
+beq
+ori
+sw
 li
-or
+and
 
 ```
 
