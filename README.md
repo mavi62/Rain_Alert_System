@@ -37,21 +37,23 @@ spike pk out
 
 ```
 
-* Based on my application whenever the sensor reads '0' (rain_sensor_ip) which means rain is falling then the roof should be closed which is '1'(roof_status_op). We can observe the same in the above spike simulation my input is being '0' my output for that input is showing '1' and for the x30 register positions of input and output are x30[0] and x30[1] respectively for the given input and output combination my x30 register should be '2'.
-  
-* Similarly, whenever the sensor reads '1' (rain_sensor_ip) which means rain is not falling then the roof should be opened which is '0'(roof_status_op). We can observe the same in the above spike simulation my input is being '1' ,so my output for that input is showing '0' and for the x30 register positions of input and output are x30[0] and x30[1] respectively for the given input and output combination my x30 register should be '1'. As expected, we can see the Spike simulation results from the above figure.  
+
+![outputs](https://github.com/mavi62/Rain_Alert_System/assets/57127783/b0a24237-919f-4e77-9559-c03e43fd70f8)
+
 
 ## C code for the design
 
 ```
 
+//#include <stdio.h>
+//#include <stdlib.h>
 int main(){
 	int rain_input;	
-	int roof_output = 0; 
+	int roof_output=0; 
 	int roof_reg;
+	int i;
 	int mask =0xFFFFFFFD;
 	roof_reg = roof_output*2;
-
 
 	asm volatile(
 	"and x30, x30, %1\n\t"
@@ -60,7 +62,8 @@ int main(){
     	: "r" (roof_reg), "r"(mask)
 	: "x30" 
 	);
-	
+
+	//for(i=0;i<3;i++)
 	while(1)
 	{	
 		asm volatile(
@@ -68,10 +71,10 @@ int main(){
 		: "=r" (rain_input)
 		:
 		:);
-
+        //rain_input=0;
 	if (rain_input)
 	{
-		roof_output = 0; 
+		roof_output = 1; 
 		mask =0xFFFFFFFD;
 		roof_reg = roof_output*2;
 		
@@ -82,23 +85,25 @@ int main(){
 		: "r" (roof_reg), "r"(mask)
 		: "x30" 
 		);
- 		//printf("Rain not detected. Buzzer off.\n");
+ 		//printf(Rain detected. Buzzer on.\n");
   		//printf("roof_output=%d \n", roof_output);
 	}	
 	
 	else
 	{
-		roof_output = 1; 
+		roof_output = 0;
 		mask =0xFFFFFFFD;
 		roof_reg = roof_output*2;
+
 		asm volatile(
-		"and x30,x30, %1\n\t"  
-	   	"or x30, x30, %0\n\t"  
-	   	:
-	   	: "r" (roof_reg), "r"(mask)
-		: "x30" 
+		"and x30,x30, %1\n\t"
+		"or x30,x30, %0\n\t"
+		:
+		: "r"(roof_reg), "r"(mask)
+		: "x30"
 		);
-		//printf("Rain detected. Buzzer on.\n");
+
+		//printf("Rain not detected. Buzzer off.\n");
 		//printf("roof_output=%d \n", roof_output);
 	}
 	}
