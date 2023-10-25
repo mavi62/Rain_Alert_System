@@ -31,51 +31,66 @@ gcc rain_sensor.c
 ```
 
 int main(){
-int rain_sensor_ip;
-int roof_status_op;
-int dummy;
-    while(1){
-    // Simulated rain sensor input (1: No rain, 0: Rain)
- // rain_sensor_ip = digital_read(0);
- int rain_sensor_ip;
- asm volatile(
-            "and %0, x30, 1\n\t"
-            : "=r"(rain_sensor_ip)
-        );
-        
+	int rain_input;	
+	int roof_output = 0; 
+	int roof_reg;
+	int mask =0xFFFFFFFD;
+	roof_reg = roof_output*2;
 
 
-    if (rain_sensor_ip!=1) {
-        
-       dummy = 0xFFFFFFFB;
-        asm volatile(
-            "and x30, x30, %0\n\t"     
-            "or x30, x30, 4\n\t"    // output at 3rd bit, that switches on the buzzer(........000100)
-            :
-            :"r"(dummy)
-            :"x30"
-            );
+	asm volatile(
+	"and x30, x30, %1\n\t"
+    	"or x30, x30, %0\n\t"  
+    	:
+    	: "r" (roof_reg), "r"(mask)
+	: "x30" 
+	);
+	
+	while(1)
+	{	
+		asm volatile(
+		"andi %0, x30, 0x01\n\t"
+		: "=r" (rain_input)
+		:
+		:);
 
-        
-    } else {
-       
-       dummy = 0xFFFFFFFB;
-       asm volatile(
-            "and x30, x30, %0\n\t"    
-            "or x30, x30, 0\n\t"       // output at 3rd bit , that switches off the buzzer(........000)
-            :
-            :"r"(dummy)
-            :"x30"
-        );
-    } 
-    }
-    return(0);
+	if (rain_input)
+	{
+		roof_output = 0; 
+		mask =0xFFFFFFFD;
+		roof_reg = roof_output*2;
+		
+		asm volatile(
+		"and x30,x30, %1\n\t"  
+		"or x30, x30, %0\n\t"   
+		:
+		: "r" (roof_reg), "r"(mask)
+		: "x30" 
+		);
+ 		//printf("Rain not detected. Buzzer off.\n");
+  		//printf("roof_output=%d \n", roof_output);
+	}	
+	
+	else
+	{
+		roof_output = 1; 
+		mask =0xFFFFFFFD;
+		roof_reg = roof_output*2;
+		asm volatile(
+		"and x30,x30, %1\n\t"  
+	   	"or x30, x30, %0\n\t"  
+	   	:
+	   	: "r" (roof_reg), "r"(mask)
+		: "x30" 
+		);
+		//printf("Rain detected. Buzzer on.\n");
+		//printf("roof_output=%d \n", roof_output);
+	}
+	}
+
+	return 0;
+
 }
-
-
- //assuming sensors gives 0 if it detects rain
-    //sensors to detect rain :    0    
-    //gpio's for buzzer  : 2
 
 ```
 
@@ -89,30 +104,49 @@ The above C program is compiled using the RISC-V GNU toolchain and the assembly 
 
 out:     file format elf32-littleriscv
 
-
 Disassembly of section .text:
 
 00010054 <main>:
-   10054:	fe010113          	addi	sp,sp,-32
-   10058:	00812e23          	sw	s0,28(sp)
-   1005c:	02010413          	addi	s0,sp,32
-   10060:	001f7793          	andi	a5,t5,1
-   10064:	fef42623          	sw	a5,-20(s0)
-   10068:	fec42703          	lw	a4,-20(s0)
-   1006c:	00100793          	li	a5,1
-   10070:	00f70e63          	beq	a4,a5,1008c <main+0x38>
-   10074:	ffb00793          	li	a5,-5
-   10078:	fef42423          	sw	a5,-24(s0)
-   1007c:	fe842783          	lw	a5,-24(s0)
-   10080:	00ff7f33          	and	t5,t5,a5
-   10084:	004f6f13          	ori	t5,t5,4
-   10088:	fd9ff06f          	j	10060 <main+0xc>
-   1008c:	ffb00793          	li	a5,-5
-   10090:	fef42423          	sw	a5,-24(s0)
-   10094:	fe842783          	lw	a5,-24(s0)
-   10098:	00ff7f33          	and	t5,t5,a5
-   1009c:	000f6f13          	ori	t5,t5,0
-   100a0:	fc1ff06f          	j	10060 <main+0xc>
+   10054:       fe010113                addi    sp,sp,-32
+   10058:       00812e23                sw      s0,28(sp)
+   1005c:       02010413                addi    s0,sp,32
+   10060:       fe042623                sw      zero,-20(s0)
+   10064:       ffd00793                li      a5,-3
+   10068:       fef42423                sw      a5,-24(s0)
+   1006c:       fec42783                lw      a5,-20(s0)
+   10070:       00179793                slli    a5,a5,0x1
+   10074:       fef42223                sw      a5,-28(s0)
+   10078:       fe442783                lw      a5,-28(s0)
+   1007c:       fe842703                lw      a4,-24(s0)
+   10080:       00ef7f33                and     t5,t5,a4
+   10084:       00ff6f33                or      t5,t5,a5
+   10088:       001f7793                andi    a5,t5,1
+   1008c:       fef42023                sw      a5,-32(s0)
+   10090:       fe042783                lw      a5,-32(s0)
+   10094:       02078863                beqz    a5,100c4 <main+0x70>
+   10098:       fe042623                sw      zero,-20(s0)
+   1009c:       ffd00793                li      a5,-3
+   100a0:       fef42423                sw      a5,-24(s0)
+   100a4:       fec42783                lw      a5,-20(s0)
+   100a8:       00179793                slli    a5,a5,0x1
+   100ac:       fef42223                sw      a5,-28(s0)
+   100b0:       fe442783                lw      a5,-28(s0)
+   100b4:       fe842703                lw      a4,-24(s0)
+   100b8:       00ef7f33                and     t5,t5,a4
+   100bc:       00ff6f33                or      t5,t5,a5
+   100c0:       fc9ff06f                j       10088 <main+0x34>
+   100c4:       00100793                li      a5,1
+   100c8:       fef42623                sw      a5,-20(s0)
+   100cc:       ffd00793                li      a5,-3
+   100d0:       fef42423                sw      a5,-24(s0)
+   100d4:       fec42783                lw      a5,-20(s0)
+   100d8:       00179793                slli    a5,a5,0x1
+   100dc:       fef42223                sw      a5,-28(s0)
+   100e0:       fe442783                lw      a5,-28(s0)
+   100e4:       fe842703                lw      a4,-24(s0)
+   100e8:       00ef7f33                and     t5,t5,a4
+   100ec:       00ff6f33                or      t5,t5,a5
+   100f0:       f99ff06f                j       10088 <main+0x34>
 
 ```
 
@@ -121,17 +155,19 @@ The above assembly code was run on a Python script to find the different instruc
 <br />
 
 ```
-Number of different instructions: 9
+
+Number of different instructions: 10
 List of unique instructions:
-addi
-j
-andi
-lw
-beq
-ori
+beqz
 sw
-li
+andi
+slli
+j
+lw
 and
+li
+addi
+or
 
 ```
 
