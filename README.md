@@ -32,7 +32,7 @@ Commands to run spike:
 
 ```
 
-riscv64-unknown-elf-gcc -march=rv64i -mabi=lp64 -ffreestanding -o out arc.c
+riscv64-unknown-elf-gcc -march=rv64i -mabi=lp64 -ffreestanding -o out rain_sensor.c
 spike pk out
 
 ```
