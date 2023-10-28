@@ -191,6 +191,21 @@ or
 
 ```
 
+## Functional Simluation
+
+* We will do the functional simulation for the processors that are being created for the assembly program that is being created for my application. The ```processor.v``` and the ```testbench.v``` is uploaded and those can be seen above.
+* 
+* Commands to run the verilog file
+
+      iverilog -o test processor.v testbench.v
+      ./test
+      gtkwave waveform.vcd
+
+
+
+* In the above figure, we can see the test results stating fails:0 which means that UART transmission is done without any error.
+
+
 ## Acknowledgement
 
 1. Kunal Ghosh, VSD Corp. Pvt. Ltd.
