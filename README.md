@@ -202,8 +202,13 @@ or
       gtkwave waveform.vcd
 
 
+![op-1](https://github.com/mavi62/Rain_Alert_System/assets/57127783/1de1f123-9955-4afe-9823-4a99a8960ed9)
+
 
 * In the above figure, we can see the test results stating fails:0 which means that UART transmission is done without any error.
+
+
+![1](https://github.com/mavi62/Rain_Alert_System/assets/57127783/5a6bbbeb-97f8-4b55-8acf-185f882e525f)
 
 
 ## Acknowledgement
