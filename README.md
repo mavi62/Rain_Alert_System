@@ -40,7 +40,7 @@ spike pk out
 ```
 
 
-![outputs](https://github.com/mavi62/Rain_Alert_System/assets/57127783/b0a24237-919f-4e77-9559-c03e43fd70f8)
+![out spike](https://github.com/mavi62/Rain_Alert_System/assets/57127783/be21932d-56fc-4485-b162-6137d7d60652)
 
 
 ## C code for the design
@@ -124,6 +124,13 @@ int main(){
 
 The above C program is compiled using the RISC-V GNU toolchain and the assembly code is dumped into a text file.
 
+```
+
+riscv64-unknown-elf-gcc -march=rv32i -mabi=ilp32 -ffreestanding -nostdlib -o out rain_sensor.c 
+riscv64-unknown-elf-objdump -d -r out > asm.txt
+
+```
+
 ### Assembly code:
 
 ```
@@ -195,22 +202,52 @@ or
 
 ## Functional Simluation
 
-* We will do the functional simulation for the processors that are being created for the assembly program that is being created for my application. The ```processor.v``` and the ```testbench.v``` is uploaded and those can be seen above.
-* 
-* Commands to run the verilog file
+For the processors being developed for the assembly program for my project, we will carry out the functional simulation. 
 
-      iverilog -o test processor.v testbench.v
-      ./test
-      gtkwave waveform.vcd
+### Commands to run the verilog file
 
+```
 
-![op-1](https://github.com/mavi62/Rain_Alert_System/assets/57127783/1de1f123-9955-4afe-9823-4a99a8960ed9)
+iverilog -o test processor.v testbench.v
+./test
+gtkwave waveform.vcd
 
-
-* In the above figure, we can see the test results stating fails:0 which means that UART transmission is done without any error.
+```
 
 
-![1](https://github.com/mavi62/Rain_Alert_System/assets/57127783/5a6bbbeb-97f8-4b55-8acf-185f882e525f)
+![spike_1](https://github.com/mavi62/Rain_Alert_System/assets/57127783/8e348b6a-1835-48de-90c5-26d7e99dfa86)
+
+
+![spike_2](https://github.com/mavi62/Rain_Alert_System/assets/57127783/2fed78e0-6efa-4808-8f18-654e053c6d96)
+
+
+Given that the UART was omitted, write_done is becoming 1 at t=o, and the ID_instruction begins to run after the reset zero is made.
+
+
+![spike_signal_30-1](https://github.com/mavi62/Rain_Alert_System/assets/57127783/1ac2349c-4541-488e-87ed-aaebf9709c89)
+
+
+In reality, the ```$signal[31:0]``` is a representation of the x30 register, which stores inputs from the sensor after retrieving the values needed to calculate the output and then stores those values back in the register.
+
+The ```ID_instruction``` is broken down into individual instructions, and only then do the subsequent stages one at a time.
+
+
+![02078663](https://github.com/mavi62/Rain_Alert_System/assets/57127783/33b81395-31f7-4dce-83fa-979a7f25517c)
+
+
+When the ID_instruction in the preceding figure is ```02078863```, the pc jumps to a specific instruction. This is because the instruction checks if the input is a 1, and if it isn't, the computer value doesn't increase by one; instead, it jumps to a different location.
+
+
+![00ff6f33](https://github.com/mavi62/Rain_Alert_System/assets/57127783/e3faa21e-1614-4598-8100-ee6e419b6056)
+
+
+Output is changing from 0 to 1 after the execution of instruction ```00FF6F33```.
+
+
+![00ef7f33](https://github.com/mavi62/Rain_Alert_System/assets/57127783/746f9007-381d-4d56-b904-164136101714)
+
+
+Output is changing from 1 to 0 after the execution of instruction ```00ef7f33```.
 
 
 ## Acknowledgement
