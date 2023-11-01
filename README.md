@@ -22,8 +22,10 @@ Here we will be using a Rain Drop Sensor. A rin drop sensor works on the princip
 3. Compile the code designed using gcc and verify the output.
 
 ```
+
 gcc rain_sensor.c
 ./a.out
+
 ```
 
 ## Spike Simulation
@@ -49,21 +51,22 @@ spike pk out
 //#include <stdlib.h>
 int main(){
 	int rain_input;	
-	int roof_output=0; 
-	int roof_reg;
+	int buzzer_output=0; 
+	int buzzer_reg;
 	int i;
 	int mask =0xFFFFFFFD;
-	roof_reg = roof_output*2;
+	buzzer_reg = buzzer_output*2;
+
 
 	asm volatile(
 	"and x30, x30, %1\n\t"
     	"or x30, x30, %0\n\t"  
     	:
-    	: "r" (roof_reg), "r"(mask)
+    	: "r" (buzzer_reg), "r"(mask)
 	: "x30" 
 	);
-
-	//for(i=0;i<3;i++)
+	// rain_input=0;
+	// for(i=0;i<8;i++)
 	while(1)
 	{	
 		asm volatile(
@@ -71,40 +74,43 @@ int main(){
 		: "=r" (rain_input)
 		:
 		:);
-        //rain_input=0;
+       
 	if (rain_input)
 	{
-		roof_output = 1; 
-		mask =0xFFFFFFFD;
-		roof_reg = roof_output*2;
+		buzzer_output = 1; 
+		
+		buzzer_reg = buzzer_output*2;
 		
 		asm volatile(
 		"and x30,x30, %1\n\t"  
 		"or x30, x30, %0\n\t"   
 		:
-		: "r" (roof_reg), "r"(mask)
+		: "r" (buzzer_reg), "r"(mask)
 		: "x30" 
 		);
- 		//printf(Rain detected. Buzzer on.\n");
-  		//printf("roof_output=%d \n", roof_output);
+ 		//printf("Rain detected. Buzzer on.\n");
+  		//printf("buzzer_output=%d \n", buzzer_output);
+		// rain_input=0; 
+		
 	}	
 	
 	else
 	{
-		roof_output = 0;
-		mask =0xFFFFFFFD;
-		roof_reg = roof_output*2;
+		buzzer_output = 0;
+		
+		buzzer_reg = buzzer_output*2;
 
 		asm volatile(
 		"and x30,x30, %1\n\t"
 		"or x30,x30, %0\n\t"
 		:
-		: "r"(roof_reg), "r"(mask)
+		: "r"(buzzer_reg), "r"(mask)
 		: "x30"
 		);
 
 		//printf("Rain not detected. Buzzer off.\n");
-		//printf("roof_output=%d \n", roof_output);
+		//printf("buzzer_output=%d \n", buzzer_output);
+		// rain_input=1; 
 	}
 	}
 
