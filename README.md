@@ -22,10 +22,8 @@ Here we will be using a Rain Drop Sensor. A rin drop sensor works on the princip
 3. Compile the code designed using gcc and verify the output.
 
 ```
-
 gcc rain_sensor.c
 ./a.out
-
 ```
 
 ## Spike Simulation
@@ -33,10 +31,8 @@ gcc rain_sensor.c
 Commands to run spike: 
 
 ```
-
 riscv64-unknown-elf-gcc -march=rv64i -mabi=lp64 -ffreestanding -o out rain_sensor.c
 spike pk out
-
 ```
 
 
@@ -46,7 +42,6 @@ spike pk out
 ## C code for the design
 
 ```
-
 //#include <stdio.h>
 //#include <stdlib.h>
 int main(){
@@ -117,7 +112,6 @@ int main(){
 	return 0;
 
 }
-
 ```
 
 ## Assembly code conversion
@@ -125,16 +119,13 @@ int main(){
 The above C program is compiled using the RISC-V GNU toolchain and the assembly code is dumped into a text file.
 
 ```
-
 riscv64-unknown-elf-gcc -march=rv32i -mabi=ilp32 -ffreestanding -nostdlib -o out rain_sensor.c 
 riscv64-unknown-elf-objdump -d -r out > asm.txt
-
 ```
 
 ### Assembly code:
 
 ```
-
 out:     file format elf32-littleriscv
 
 Disassembly of section .text:
@@ -176,7 +167,6 @@ Disassembly of section .text:
    100d8:	00ef7f33          	and	t5,t5,a4
    100dc:	00ff6f33          	or	t5,t5,a5
    100e0:	fa9ff06f          	j	10088 <main+0x34>
-
 ```
 
 <br />
@@ -184,7 +174,6 @@ The above assembly code was run on a Python script to find the different instruc
 <br />
 
 ```
-
 Number of different instructions: 10
 List of unique instructions:
 beqz
@@ -197,7 +186,6 @@ and
 li
 addi
 or
-
 ```
 
 ## Functional Simluation
@@ -207,11 +195,9 @@ For the processors being developed for the assembly program for my project, we 
 ### Commands to run the verilog file
 
 ```
-
 iverilog -o test processor.v testbench.v
 ./test
 gtkwave waveform.vcd
-
 ```
 
 
