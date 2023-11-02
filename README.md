@@ -235,13 +235,65 @@ Output is changing from 0 to 1 after the execution of instruction ```00FF6F33```
 
 Output is changing from 1 to 0 after the execution of instruction ```00ef7f33```.
 
+## GLS
+
+### Commands to run synthesis
+
+The ```processor.v``` file is modified before the synthesis is executed.
+
+* Commenting the module definitions of both ```sky130_sram_2kbyte_1rw1r_32x256_8_data``` and ```sky130_sram_2kbyte_1rw1r_32x256_8_inst```.
+
+* Since the CPU doesn't truly need 2k ram, the already instantiated sram modules are also modified from ```sky130_sram_2kbyte_1rw1r_32x256_8_data``` and ```sky130_sram_2kbyte_1rw1r_32x256_8_inst``` to ```sky130_sram_1kbyte_1rw1r_32x256_8```.
+
+* Using ```writing_inst_done=1``` and ```writing_inst_done=0```, perform synthesis twice. and two netlists, dubbed ```synth_test.v``` and ```synth_processor.v```, respectively, are obtained. When ```writing_inst_done=1```, it indicates that simulation and verification are carried out using the matching netlist gate level and that the uart is passed in order to prevent the.vcd file from taking up more than 20 GB.
+
+```
+yosys
+read_liberty -lib sky130_fd_sc_hd__tt_025C_1v80_256.lib 
+read_verilog processor.v 
+synth -top wrapper 
+dfflibmap -liberty sky130_fd_sc_hd__tt_025C_1v80_256.lib
+abc -liberty sky130_fd_sc_hd__tt_025C_1v80_256.lib
+write_verilog synth_processor.v
+
+```
+
+Use the commands provided above to implement the design.
+
+
+![yosys-1](https://github.com/mavi62/Rain_Alert_System/assets/57127783/70835809-bd0b-45f2-a6f9-c815217073c0)
+
+
+### Gate level Simulation
+
+Some modifications are done to the synthesised netlist file prior to doing gate level simulation utilizing the synthesised netlist.
+
+* We modified the sram module instantiation names to match the standard cell before beginning synthesis, but since this is a simulation and not a cell, we must instantiate the module names exactly as they appear in the file ```sky130_sram_1kbyte_1rw1r_32x256_8.v```, which contains the sine module definition. Particularly, ```sky130_sram_1kbyte_1rw1r_32x256_8_data``` and ```sky130_sram_1kbyte_1rw1r_32x256_8_inst```.
+
+* Additionally, replace the mem instructions in the ```sky130_sram_1kbyte_1rw1r_32x256_8.v``` file with our processor instructions, which are derived from the ```processor.v```.
+
+Use the command below to launch the simulation once the modifications have been made.
+
+```
+iverilog -o synth_test testbench.v synth_test.v sky130_sram_1kbyte_1rw1r_32x256_8.v sky130_fd_sc_hd.v primitives.v
+
+```
+
+![gls_verify](https://github.com/mavi62/Rain_Alert_System/assets/57127783/6a8ce793-2739-4b28-b09b-a23db8876b89)
+
+
+We can see some numbers underneath the dut on the left side of the above screenshot, which suggests that we used the synthesized netlist to simulate. Additionally, the behavior of the output matches that of the RTL functional simulation. Therefore, we can now continue with the OpenLane flow.
+
+The wrapper module is seen in the following snapshot running the command in Yosys.
+
+![yosys_fault](https://github.com/mavi62/Rain_Alert_System/assets/57127783/87c042c2-af87-4bb5-8130-bc029e89431a)
+
 
 ## Acknowledgement
 
 1. Kunal Ghosh, VSD Corp. Pvt. Ltd.
-2. Sumanto Kar,VSD Corp.
-3. Mayank Kabra, IIIT-Bangalore
-4. Emil Jayanth Lal, Colleague, IIIT-Bangalore
+2. Mayank Kabra, IIIT-Bangalore
+3. Emil Jayanth Lal, Colleague, IIIT-Bangalore
 
 ## References
 
