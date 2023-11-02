@@ -207,7 +207,7 @@ gtkwave waveform.vcd
 ![spike_2](https://github.com/mavi62/Rain_Alert_System/assets/57127783/2fed78e0-6efa-4808-8f18-654e053c6d96)
 
 
-Given that the UART was omitted, write_done is becoming 1 at t=o, and the ID_instruction begins to run after the reset zero is made.
+Given that the UART was omitted, write_done is becoming 1 at t=o, and the ID_instruction begins to run after the reset is made 0.
 
 
 ![spike_signal_30-1](https://github.com/mavi62/Rain_Alert_System/assets/57127783/1ac2349c-4541-488e-87ed-aaebf9709c89)
