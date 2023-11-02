@@ -235,7 +235,7 @@ Output is changing from 0 to 1 after the execution of instruction ```00FF6F33```
 
 Output is changing from 1 to 0 after the execution of instruction ```00ef7f33```.
 
-## GLS
+## Synthesis(Yosys) and GLS
 
 ### Commands to run synthesis
 
@@ -255,7 +255,6 @@ synth -top wrapper
 dfflibmap -liberty sky130_fd_sc_hd__tt_025C_1v80_256.lib
 abc -liberty sky130_fd_sc_hd__tt_025C_1v80_256.lib
 write_verilog synth_processor.v
-
 ```
 
 Use the commands provided above to implement the design.
@@ -276,7 +275,6 @@ Use the command below to launch the simulation once the modifications have been 
 
 ```
 iverilog -o synth_test testbench.v synth_test.v sky130_sram_1kbyte_1rw1r_32x256_8.v sky130_fd_sc_hd.v primitives.v
-
 ```
 
 ![gls_verify](https://github.com/mavi62/Rain_Alert_System/assets/57127783/6a8ce793-2739-4b28-b09b-a23db8876b89)
