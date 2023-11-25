@@ -468,17 +468,20 @@ gen_pdn
 ```bash
 run_routing
 ```
+
 - The layout can be viewed using MAGIC in ```results/routing```
 
 ```bash
- magic -T ~/.volare/sky130A/libs.tech/magic/sky130A.tech lef read ../../tmp/merged.nom.lef def read wrapper.def &
+magic -T /home/mavi/OpenLane/vsdstdcelldesign/libs/sky130A.tech lef read /home/mavi/OpenLane/designs/project/runs/RUN_2023.11.25_08.17.03/tmp/merged.nom.lef def read /home/mavi/OpenLane/designs/project/runs/RUN_2023.11.25_08.17.03/results/routing/wrapper.def
 ```
 
-![image](https://github.com/Shant1R/Locker_authenticator_RISCV/assets/59409568/bf1121d8-5196-4a59-b7ce-ea1dd2e92703)
+![1](https://github.com/mavi62/Rain_Alert_System/assets/57127783/e989798a-5d32-43ba-95f4-5d31ec767748)
+
 
 - Area of Design
 
-![image](https://github.com/Shant1R/Locker_authenticator_RISCV/assets/59409568/74dc28ae-a53a-444c-b213-1ad8c6c9f81b)
+![2](https://github.com/mavi62/Rain_Alert_System/assets/57127783/0c27f227-8dad-4a4b-900c-b011493a5300)
+
 
 - Post Routing Reports
   
