@@ -390,7 +390,7 @@ run_floorplan
 magic -T /home/mavi/OpenLane/vsdstdcelldesign/libs/sky130A.tech lef read /home/mavi/OpenLane/designs/project/runs/RUN_2023.11.25_08.17.03/tmp/merged.nom.lef def read /home/mavi/OpenLane/designs/project/runs/RUN_2023.11.25_08.17.03/results/floorplan/wrapper.def 
 ```
 
-![floorplan magic](https://github.com/mavi62/Rain_Alert_System/assets/57127783/369344c3-9948-47cf-aa31-a4ff46b0a0f0)
+![floorplan new](https://github.com/mavi62/Rain_Alert_System/assets/57127783/86ffd1b7-0069-4137-9877-2e420f1e18b2)
 
 
 - Core Area after floorplan
