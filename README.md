@@ -293,7 +293,9 @@ The wrapper module is seen in the following snapshot running the command in Yosy
 
 Place and Route (PnR) is the core of any ASIC implementation and Openlane flow integrates into it several key open source tools which perform each of the respective stages of PnR. Below are the stages and the respective tools that are called by openlane for the functionalities as described:
 
-![image](https://github.com/Shant1R/Locker_authenticator_RISCV/assets/59409568/c66ac9cb-2793-4c0b-a84d-66409d9c07ec)
+
+![1](https://github.com/mavi62/Rain_Alert_System/assets/57127783/9b88cc50-7a55-4394-bb07-c3ce804db9cc)
+
 
 Below are the stages and the respective tools that are called by openlane for the functionalities as described:
 
@@ -322,14 +324,8 @@ Magic is a venerable VLSI layout tool, written in the 1980's at Berkeley by John
 More about magic at http://opencircuitdesign.com/magic/index.html
 
 ## Preparing the Design
-Preparing the design and including the lef files: The commands to prepare the design and overwite in a existing run folder the reports and results along with the command to include the lef files is given below:
 
-```bash
-sed -i's/max_transition   :0.04/max_transition   :0.75'*/*.lib
-```
 *OpenLane Interactive Flow:*
-
-***The openlane flow is performed on Emil Jayanth Lal's system.***
 
 ```bash
 make mount
@@ -340,11 +336,14 @@ make mount
 
 ```
 
-![Screenshot from 2023-11-14 13-17-10](https://github.com/Shant1R/Locker_authenticator_RISCV/assets/59409568/d1206f14-e263-4925-88f8-918e229b217f)
+![starting](https://github.com/mavi62/Rain_Alert_System/assets/57127783/e2c5da36-a117-4d36-b4d0-b52dd93616da)
+
 
 Completion of routing 
 
-![Screenshot from 2023-11-14 13-17-22](https://github.com/Shant1R/Locker_authenticator_RISCV/assets/59409568/8eaea1dc-a4d7-42f0-9c2f-4c4e15d3e81b)
+
+![completion](https://github.com/mavi62/Rain_Alert_System/assets/57127783/4bdf2bb2-757f-4855-96b4-ae5f2a9ce586)
+
 
 Sign off steps 
 
@@ -355,7 +354,7 @@ run_magic_drc
 run_antenna_check
 ```
 
-![Screenshot from 2023-11-14 13-46-36](https://github.com/Shant1R/Locker_authenticator_RISCV/assets/59409568/88a55c5f-eaa4-4b91-900d-5a363e030011)
+![signpff steps](https://github.com/mavi62/Rain_Alert_System/assets/57127783/2375c1f5-2b9e-48e6-9fb2-7582ceb4072e)
 
 
 ## Reports 
@@ -367,11 +366,13 @@ run_antenna_check
   - Technology Mapping – Consists of mapping the post-optimized GTECH netlist to standard cells described in the PDK.
 
 - To synthesize the code run the following command.
+
 ```bash
 run_synthesis
 ```
 
-![Screenshot from 2023-11-14 20-30-06](https://github.com/Shant1R/Locker_authenticator_RISCV/assets/59409568/fda5e990-c067-4c4a-8dda-f28258a6d1a1)
+![synth - log](https://github.com/mavi62/Rain_Alert_System/assets/57127783/bc9a7eb6-b320-4acf-861d-bdb229f48ff7)
+
 
 ***FLOORPLAN***
 
@@ -386,17 +387,20 @@ run_floorplan
 - to view the floorplan on Magic from ```results/floorplan```
 
 ```bash
- magic -T ~/.volare/sky130A/libs.tech/magic/sky130A.tech lef read ../../tmp/merged.nom.lef def read wrapper.def &
+magic -T /home/mavi/OpenLane/vsdstdcelldesign/libs/sky130A.tech lef read /home/mavi/OpenLane/designs/project/runs/RUN_2023.11.25_08.17.03/tmp/merged.nom.lef def read /home/mavi/OpenLane/designs/project/runs/RUN_2023.11.25_08.17.03/results/floorplan/wrapper.def 
 ```
-![image](https://github.com/Shant1R/Locker_authenticator_RISCV/assets/59409568/0713e283-106d-49a3-9bc0-f11bab45d481)
+
+![floorplan magic](https://github.com/mavi62/Rain_Alert_System/assets/57127783/369344c3-9948-47cf-aa31-a4ff46b0a0f0)
+
 
 - Core Area after floorplan
 
-![image](https://github.com/Shant1R/Locker_authenticator_RISCV/assets/59409568/18eba386-cc1f-4d3e-a299-8415428cd6cc)
+![core area](https://github.com/mavi62/Rain_Alert_System/assets/57127783/5fc6b13c-9e32-400d-a356-737a6496f0c0)
+
 
 - Die Area after floorplan
 
-![image](https://github.com/Shant1R/Locker_authenticator_RISCV/assets/59409568/7d892f9b-6c5b-49e1-bc4f-849808ac5a9e)
+![die area](https://github.com/mavi62/Rain_Alert_System/assets/57127783/b2ae779b-bac7-4a40-8b4b-d98179ff1f48)
 
 
 ***PLACEMENT***
@@ -414,10 +418,10 @@ run_placement
 - to view the placement on Magic from ```results/placement```
 
 ```bash
- magic -T ~/.volare/sky130A/libs.tech/magic/sky130A.tech lef read ../../tmp/merged.nom.lef def read wrapper.def &
+magic -T /home/mavi/OpenLane/vsdstdcelldesign/libs/sky130A.tech lef read /home/mavi/OpenLane/designs/project/runs/RUN_2023.11.25_08.17.03/tmp/merged.nom.lef def read /home/mavi/OpenLane/designs/project/runs/RUN_2023.11.25_08.17.03/results/placement/wrapper.def
 ```
 
-![image](https://github.com/Shant1R/Locker_authenticator_RISCV/assets/59409568/6763b55d-9035-4153-adb7-fa9b1544b5a0)
+![placement magic](https://github.com/mavi62/Rain_Alert_System/assets/57127783/9efaceeb-3ad9-4734-8294-d7ac3963eaf7)
 
 
 ***CLOCK TREE SYNTHESIS***
@@ -433,19 +437,12 @@ run_cts
 
 - Timimg Report
 
-![image](https://github.com/Shant1R/Locker_authenticator_RISCV/assets/59409568/39ac231d-b3a6-4e6a-bc34-3a659cb41f4a)
+![timing report](https://github.com/mavi62/Rain_Alert_System/assets/57127783/8490de5d-3017-4068-9e37-c1e5ec73f46b)
 
-- Area Report
-
-![image](https://github.com/Shant1R/Locker_authenticator_RISCV/assets/59409568/ccaf0213-777a-4854-95c7-2141bcd67ad1)
-
-- Skew Report
-
-![image](https://github.com/Shant1R/Locker_authenticator_RISCV/assets/59409568/d1baeba3-99a1-4b61-9435-25b951e42e38)
 
 - Power Report
 
-![image](https://github.com/Shant1R/Locker_authenticator_RISCV/assets/59409568/3808c1c2-1070-4060-af5e-412e54f930e6)
+![power](https://github.com/mavi62/Rain_Alert_System/assets/57127783/47a03e3c-bebf-48e1-a54b-84faa86eea2c)
 
 
 ***POWER NETWORK DISTRIBUTION***
@@ -499,9 +496,7 @@ run_routing
  
   -  Design Rule Check (DRC)
 
-![image](https://github.com/Shant1R/Locker_authenticator_RISCV/assets/59409568/a971d705-9e57-499d-82b7-012206d12555)
-
-
+![DRC](https://github.com/mavi62/Rain_Alert_System/assets/57127783/ee406745-57a7-4806-b0d9-dc4397100efb)
 
 
 ## Word of Thanks
@@ -515,7 +510,6 @@ I would take this opportunity to Emil Jayanth Lal, for his assistance in the com
 - OpenAI Chatgpt
 - Alwin Shaju, MTech, IIITB
 - Emil Jayanth Lal, MTech, IIITB
-- N Sai Sampath, MTech, IIITB
 - Mayank Kabra, Founder, Chipcron Pvt.Ltd.
 
 ## Reference
@@ -530,7 +524,6 @@ I would take this opportunity to Emil Jayanth Lal, for his assistance in the com
 
 1. Kunal Ghosh, VSD Corp. Pvt. Ltd.
 2. Mayank Kabra, IIIT-Bangalore
-3. Emil Jayanth Lal, Colleague, IIIT-Bangalore
 
 ## References
 
