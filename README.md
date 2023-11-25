@@ -287,6 +287,245 @@ The wrapper module is seen in the following snapshot running the command in Yosy
 ![yosys_fault](https://github.com/mavi62/Rain_Alert_System/assets/57127783/87c042c2-af87-4bb5-8130-bc029e89431a)
 
 
+## Physical Design using OPENLANE 
+
+***OVERVIEW OF PHYSICAL DESIGN***
+
+Place and Route (PnR) is the core of any ASIC implementation and Openlane flow integrates into it several key open source tools which perform each of the respective stages of PnR. Below are the stages and the respective tools that are called by openlane for the functionalities as described:
+
+![image](https://github.com/Shant1R/Locker_authenticator_RISCV/assets/59409568/c66ac9cb-2793-4c0b-a84d-66409d9c07ec)
+
+Below are the stages and the respective tools that are called by openlane for the functionalities as described:
+
+- Synthesis Generating gate-level netlist (yosys). Performing cell mapping (abc). Performing pre-layout STA (OpenSTA).
+
+-  Floorplanning Defining the core area for the macro as well as the cell sites and the tracks (init_fp). Placing the macro input and output ports (ioplacer). Generating the power distribution network (pdn).
+
+- Placement Performing global placement (RePLace). Perfroming detailed placement to legalize the globally placed components (OpenDP).
+
+- Clock Tree Synthesis (CTS) Synthesizing the clock tree (TritonCTS).
+
+- Routing Performing global routing to generate a guide file for the detailed router (FastRoute). Performing detailed routing (TritonRoute).
+
+- GDSII Generation Streaming out the final GDSII layout file from the routed def (Magic).
+
+***OPENLANE***
+
+OpenLane is an automated RTL to GDSII flow based on several components including OpenROAD, Yosys, Magic, Netgen, CVC, SPEF-Extractor, CU-GR, Klayout and a number of custom scripts for design exploration and optimization. The flow performs full ASIC implementation steps from RTL all the way down to GDSII.
+
+More about Openlane at : https://github.com/The-OpenROAD-Project/OpenLane
+
+***MAGIC***
+
+Magic is a venerable VLSI layout tool, written in the 1980's at Berkeley by John Ousterhout, now famous primarily for writing the scripting interpreter language Tcl. Due largely in part to its liberal Berkeley open-source license, magic has remained popular with universities and small companies. The open-source license has allowed VLSI engineers with a bent toward programming to implement clever ideas and help magic stay abreast of fabrication technology. However, it is the well thought-out core algorithms which lend to magic the greatest part of its popularity. Magic is widely cited as being the easiest tool to use for circuit layout, even for people who ultimately rely on commercial tools for their product design flow.
+
+More about magic at http://opencircuitdesign.com/magic/index.html
+
+## Preparing the Design
+Preparing the design and including the lef files: The commands to prepare the design and overwite in a existing run folder the reports and results along with the command to include the lef files is given below:
+
+```bash
+sed -i's/max_transition   :0.04/max_transition   :0.75'*/*.lib
+```
+*OpenLane Interactive Flow:*
+
+***The openlane flow is performed on Emil Jayanth Lal's system.***
+
+```bash
+make mount
+%./flow.tcl -interactive
+% package require openlane 0.9
+% prep -design project
+% run_synthesis; run_floorplan; run_placement; run_cts; gen_pdn; run_routing
+
+```
+
+![Screenshot from 2023-11-14 13-17-10](https://github.com/Shant1R/Locker_authenticator_RISCV/assets/59409568/d1206f14-e263-4925-88f8-918e229b217f)
+
+Completion of routing 
+
+![Screenshot from 2023-11-14 13-17-22](https://github.com/Shant1R/Locker_authenticator_RISCV/assets/59409568/8eaea1dc-a4d7-42f0-9c2f-4c4e15d3e81b)
+
+Sign off steps 
+
+```bash
+run_magic
+run_magic_spice_export
+run_magic_drc
+run_antenna_check
+```
+
+![Screenshot from 2023-11-14 13-46-36](https://github.com/Shant1R/Locker_authenticator_RISCV/assets/59409568/88a55c5f-eaa4-4b91-900d-5a363e030011)
+
+
+## Reports 
+
+***SYNTHESIS***
+
+- Logic synthesis uses the RTL netlist to perform HDL technology mapping. The synthesis process is normally performed in two major steps:
+  - GTECH Mapping – Consists of mapping the HDL netlist to generic gates what are used to perform logical optimization based on AIGERs and other topologies created from the generic mapped netlist
+  - Technology Mapping – Consists of mapping the post-optimized GTECH netlist to standard cells described in the PDK.
+
+- To synthesize the code run the following command.
+```bash
+run_synthesis
+```
+
+![Screenshot from 2023-11-14 20-30-06](https://github.com/Shant1R/Locker_authenticator_RISCV/assets/59409568/fda5e990-c067-4c4a-8dda-f28258a6d1a1)
+
+***FLOORPLAN***
+
+- Goal is to plan the silicon area and create a robust power distribution network (PDN) to power each of the individual components of the synthesized netlist. In addition, macro placement and blockages must be defined before placement occurs to ensure a legalized GDS file. In power planning we create the ring which is connected to the pads which brings power around the edges of the chip. We also include power straps to bring power to the middle of the chip using higher metal layers which reduces IR drop and electro-migration problem.
+
+- Following command helps to run floorplan:
+
+```bash
+run_floorplan
+```
+
+- to view the floorplan on Magic from ```results/floorplan```
+
+```bash
+ magic -T ~/.volare/sky130A/libs.tech/magic/sky130A.tech lef read ../../tmp/merged.nom.lef def read wrapper.def &
+```
+![image](https://github.com/Shant1R/Locker_authenticator_RISCV/assets/59409568/0713e283-106d-49a3-9bc0-f11bab45d481)
+
+- Core Area after floorplan
+
+![image](https://github.com/Shant1R/Locker_authenticator_RISCV/assets/59409568/18eba386-cc1f-4d3e-a299-8415428cd6cc)
+
+- Die Area after floorplan
+
+![image](https://github.com/Shant1R/Locker_authenticator_RISCV/assets/59409568/7d892f9b-6c5b-49e1-bc4f-849808ac5a9e)
+
+
+***PLACEMENT***
+
+- Place the standard cells on the floorplane rows, aligned with sites defined in the technology lef file. Placement is done in two steps: Global and Detailed. In Global placement tries to find optimal position for all cells but they may be overlapping and not aligned to rows, detailed placement takes the global placement and legalizes all of the placements trying to adhere to what the global placement wants. The next step in the OpenLANE ASIC flow is placement. The synthesized netlist is to be placed on the floorplan. Placement is perfomed in 2 stages:
+  - Global Placement
+  - Detailed Placement
+
+- Run the following command to run the placement:
+
+```bash
+run_placement
+```
+
+- to view the placement on Magic from ```results/placement```
+
+```bash
+ magic -T ~/.volare/sky130A/libs.tech/magic/sky130A.tech lef read ../../tmp/merged.nom.lef def read wrapper.def &
+```
+
+![image](https://github.com/Shant1R/Locker_authenticator_RISCV/assets/59409568/6763b55d-9035-4153-adb7-fa9b1544b5a0)
+
+
+***CLOCK TREE SYNTHESIS***
+
+Clock tree synteshsis is used to create the clock distribution network that is used to deliver the clock to all sequential elements. The main goal is to create a network with minimal skew across the chip. H-trees are a common network topology that is used to achieve this goal.
+
+The purpose of building a clock tree is enable the clock input to reach every element and to ensure a zero clock skew. H-tree is a common methodology followed in CTS.
+Following command is used to run CTS.
+
+```bash
+run_cts
+```
+
+- Timimg Report
+
+![image](https://github.com/Shant1R/Locker_authenticator_RISCV/assets/59409568/39ac231d-b3a6-4e6a-bc34-3a659cb41f4a)
+
+- Area Report
+
+![image](https://github.com/Shant1R/Locker_authenticator_RISCV/assets/59409568/ccaf0213-777a-4854-95c7-2141bcd67ad1)
+
+- Skew Report
+
+![image](https://github.com/Shant1R/Locker_authenticator_RISCV/assets/59409568/d1baeba3-99a1-4b61-9435-25b951e42e38)
+
+- Power Report
+
+![image](https://github.com/Shant1R/Locker_authenticator_RISCV/assets/59409568/3808c1c2-1070-4060-af5e-412e54f930e6)
+
+
+***POWER NETWORK DISTRIBUTION***
+
+- The commmand to establish power distribution network is as follows
+
+```bash
+gen_pdn
+```
+
+***ROUTING***
+
+- Implements the interconnect system between standard cells using the remaining available metal layers after CTS and PDN generation. The routing is performed on routing grids to ensure minimal DRC errors.
+- OpenLANE uses the TritonRoute tool for routing. There are 2 stages of routing:
+  - Global Routing
+  - Detailed Routing
+
+- In Global Routing Routing region is divided into rectangle grids which are represented as course 3D routes (Fastroute tool).
+- In Detailed Finer grids and routing guides used to implement physical wiring (TritonRoute tool).
+
+- Run the following command to run the routing
+
+```bash
+run_routing
+```
+- The layout can be viewed using MAGIC in ```results/routing```
+
+```bash
+ magic -T ~/.volare/sky130A/libs.tech/magic/sky130A.tech lef read ../../tmp/merged.nom.lef def read wrapper.def &
+```
+
+![image](https://github.com/Shant1R/Locker_authenticator_RISCV/assets/59409568/bf1121d8-5196-4a59-b7ce-ea1dd2e92703)
+
+- Area of Design
+
+![image](https://github.com/Shant1R/Locker_authenticator_RISCV/assets/59409568/74dc28ae-a53a-444c-b213-1ad8c6c9f81b)
+
+- Post Routing Reports
+  
+  -  Timing
+
+![image](https://github.com/Shant1R/Locker_authenticator_RISCV/assets/59409568/2a166a15-8430-4bae-b9ea-e512418ca475)
+
+  -  Area
+ 
+![image](https://github.com/Shant1R/Locker_authenticator_RISCV/assets/59409568/ff4cadde-06b1-45be-8760-13f277def0bd)
+ 
+  -  Power
+
+![image](https://github.com/Shant1R/Locker_authenticator_RISCV/assets/59409568/e4bdc3a3-d2e7-4f05-a09b-3395f700911f)
+ 
+  -  Design Rule Check (DRC)
+
+![image](https://github.com/Shant1R/Locker_authenticator_RISCV/assets/59409568/a971d705-9e57-499d-82b7-012206d12555)
+
+
+
+
+## Word of Thanks
+I would take this opportunity to sciencerly thank Mr. Kunal Gosh(Founder/VSD) for helping me out to complete this flow smoothly.
+
+I would take this opportunity to Emil Jayanth Lal, for his assistance in the completion of the Physical Design under OpenLane flow.
+
+## Acknowledgement
+- Kunal Ghosh, VSD Corp. Pvt. Ltd.
+- Skywater Foundry
+- OpenAI Chatgpt
+- Alwin Shaju, MTech, IIITB
+- Emil Jayanth Lal, MTech, IIITB
+- N Sai Sampath, MTech, IIITB
+- Mayank Kabra, Founder, Chipcron Pvt.Ltd.
+
+## Reference
+- https://github.com/The-OpenROAD-Project/OpenSTA.git
+- https://github.com/The-OpenROAD-Project/OpenLane
+- https://github.com/kunalg123
+- https://www.vsdiat.com
+- https://openlane.readthedocs.io/en/latest
+- https://github.com/SakethGajawada/RISCV-GNU
+
 ## Acknowledgement
 
 1. Kunal Ghosh, VSD Corp. Pvt. Ltd.
