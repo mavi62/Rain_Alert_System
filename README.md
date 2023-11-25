@@ -437,12 +437,12 @@ run_cts
 
 - Timimg Report
 
-![timing report](https://github.com/mavi62/Rain_Alert_System/assets/57127783/8490de5d-3017-4068-9e37-c1e5ec73f46b)
+![14-sum](https://github.com/mavi62/Rain_Alert_System/assets/57127783/738b35fb-7ffe-4381-bd55-1c12ec37cff0)
 
 
 - Power Report
 
-![power](https://github.com/mavi62/Rain_Alert_System/assets/57127783/47a03e3c-bebf-48e1-a54b-84faa86eea2c)
+![14](https://github.com/mavi62/Rain_Alert_System/assets/57127783/33e5e9cb-aad1-4b53-af27-fc1d44e8a4c1)
 
 
 ***POWER NETWORK DISTRIBUTION***
@@ -484,15 +484,13 @@ run_routing
   
   -  Timing
 
-![image](https://github.com/Shant1R/Locker_authenticator_RISCV/assets/59409568/2a166a15-8430-4bae-b9ea-e512418ca475)
+![timing report](https://github.com/mavi62/Rain_Alert_System/assets/57127783/8490de5d-3017-4068-9e37-c1e5ec73f46b)
 
-  -  Area
- 
-![image](https://github.com/Shant1R/Locker_authenticator_RISCV/assets/59409568/ff4cadde-06b1-45be-8760-13f277def0bd)
  
   -  Power
 
-![image](https://github.com/Shant1R/Locker_authenticator_RISCV/assets/59409568/e4bdc3a3-d2e7-4f05-a09b-3395f700911f)
+![power](https://github.com/mavi62/Rain_Alert_System/assets/57127783/47a03e3c-bebf-48e1-a54b-84faa86eea2c)
+
  
   -  Design Rule Check (DRC)
 
